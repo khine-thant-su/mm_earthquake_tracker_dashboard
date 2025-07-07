@@ -1,0 +1,6 @@
+7/7/2025: Finished scraping, cleaning, and inserting quake data to Postgres database.
+
+To dos:
+- Add logic to update data daily (timestamp-based filtering)
+- Create a requirements.txt
+- Learn Folium to show earthquakes on an interactive map of Myanmar
