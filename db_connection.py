@@ -8,13 +8,15 @@ def create_quake_table():
     create_table_query = """
     CREATE TABLE IF NOT EXISTS quake_info (
         id SERIAL PRIMARY KEY,
-        timestamp TIMESTAMP,
+        timestamp TIMESTAMPTZ,
         magnitude NUMERIC NOT NULL,
         longitude NUMERIC NOT NULL,
         latitude NUMERIC NOT NULL,
         depth NUMERIC NOT NULL,
         place TEXT NOT NULL
     );
+    
+    SET timezone = "Asia/Yangon";
     """
     try:
         conn = get_db_connection()

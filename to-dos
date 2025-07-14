@@ -1,6 +1,17 @@
+TO-DOS:
+- Add logic to update data daily (timestamp-based filtering)
+- [DONE] Create a requirements.txt
+- [DONE] Use Folium to show earthquakes on an interactive map of Myanmar
+- Build app with Streamlit
+--- Connect to PostgreSQL database
+--- Show map and a line chart of earthquakes over time
+
+UPDATES:
 7/7/2025: Finished scraping, cleaning, and inserting quake data to Postgres database.
 
-To dos:
-- Add logic to update data daily (timestamp-based filtering)
-- Create a requirements.txt
-- Learn Folium to show earthquakes on an interactive map of Myanmar
+7/14/2025:
+- Checked why the most recent earthquake is the one on 7/2/2025 - because not everything scraped is from Burma.
+- Updated the timestamps in the database to UTC time.
+- Made a draft interactive map using Folium.
+
+

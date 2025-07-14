@@ -1,7 +1,6 @@
 import requests
 import pandas as pd
-from psycopg2 import sql
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 from db_connection import get_db_connection
 
 ### Scrape information from USGS
@@ -31,7 +30,7 @@ def fetch_earthquake_data(start_date:str, end_date:str, min_magnitude: float = 2
 
 def parse_earthquake_data(data):
     """Extract relevant features from the raw USGS GeoJSON response.
-    :returns a dataframe with quake info."""
+    :returns a Dataframe with quake info."""
     features = data.get("features", [])
     quake_list = []
 
@@ -44,7 +43,8 @@ def parse_earthquake_data(data):
         depth = coords[2] if len(coords) > 2 else None
 
         quake_list.append({
-            "timestamp": datetime.fromtimestamp(timestamp / 1000),  # convert from milliseconds to seconds and to UTC datetime
+            "timestamp": datetime.fromtimestamp(timestamp / 1000, tz=timezone.utc),  # convert from milliseconds to seconds and to UTC datetime
+            # If tz=None, timestamp will be converted to the platform's local date and time. The returned datetime object is naive.
             "magnitude": magnitude,
             "longitude": longitude,
             "latitude": latitude,
@@ -109,7 +109,7 @@ def main():
 
     print("Saving data to PostgresSQL...")
     conn = get_db_connection()
-    for _, row in clean_df.iterrows():
+    for _, row in clean_df.iterrows():  # "_" is the row's index, "row" is a Series object containing each row's data.
         try:
             save_quake_data(
                 conn,
@@ -136,9 +136,16 @@ if __name__ == "__main__":
 #     cur.execute("""
 #             SELECT *
 #             FROM quake_info
-#             ORDER BY timestamp asc
-#             LIMIT 6
+#             ORDER BY timestamp desc
+#             LIMIT 1
 #             """,)
 #     result = cur.fetchall()
 #
 # print(result)
+
+# conn = get_db_connection()
+# with conn.cursor() as cur:
+#     cur.execute("SELECT MAX(timestamp) FROM quake_info;")
+#     result = cur.fetchone()
+# print(result)
+
