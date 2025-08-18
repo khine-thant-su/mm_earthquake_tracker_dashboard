@@ -27,3 +27,4 @@ Run scrape&cleandata.py to retrieve raw earthquake data from the USGS API, clean
 
 3. Visualize the data
 Run map_quakes.py to generate an interactive map of the earthquakes using Folium.
+Earthquake magnitude classification referenced from [University of Alaska Fairbanks Earthquake Center](https://earthquake.alaska.edu/earthquake-magnitude-classes)
