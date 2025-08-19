@@ -8,7 +8,8 @@ Build app with Streamlit
 - [DONE] Show map and a line chart of earthquakes over time
 - [DONE] Change month names from number to letter names
 - [DONE] Display months in temporal order, instead of alphabetical order
-- Add a legend to Folium map about green, orange, red color meanings for earthquakes
+- [DONE] Add a legend to Folium map about green, orange, red color meanings for earthquakes
+- [DONE] Add depth to pop-up box on map
 
 UPDATES:
 8/18/2025: Made line chart showing monthly earthquake counts in 2025.

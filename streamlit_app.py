@@ -4,6 +4,7 @@ import altair as alt
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
+from branca.element import Template, MacroElement
 from zoneinfo import ZoneInfo
 from map_quakes import get_quake_data
 
@@ -62,16 +63,47 @@ st.altair_chart(chart, use_container_width = True) # Match the width of the pare
 ####################### Show map #######################
 map_center = [21.5, 96.0]   # Center map on Myanmar
 mm_tzone = ZoneInfo("Asia/Yangon")
-m = folium.Map(location=map_center, zoom_start=6, tiles='CartoDB positron')
+
+# Create a base map
+m = folium.Map(location=map_center, zoom_start=5, tiles='CartoDB positron')
 
 for _, row in df.iterrows():
     folium.CircleMarker(
         location = [row['latitude'], row['longitude']],
-        radius = 3,
-        popup = f"Magnitude: {row['magnitude']}<br>Time: {row['timestamp'].astimezone(mm_tzone)}",
+        radius = row['magnitude'] ** 1.5,  # scale radius by magnitude
+        popup = f"Magnitude: {row['magnitude']}<br>Depth: {row['depth']}<br>Time: {row['timestamp'].astimezone(mm_tzone)}",
         color = 'green' if row['magnitude'] <= 3.9 else 'orange' if row['magnitude'] <= 5.9 else 'red',  # Earthquake magnitude classifications from University of Alaska Fairbanks Earthquake Center
-        fill = True
+        fill = True,
+        fill_opacity = 0.5
     ).add_to(m)
 
-st.markdown("##### Location of 2025 earthquakes in Myanmar")
+# Define the legend's HTML using Branca
+# 'this' refers to the current Folium map object, 'kwargs' is a dict of keyword arguments passed to the macro.
+legend_html = """
+{% macro html(this, kwargs) %}  
+<div style="
+    position: fixed; 
+    bottom: 40px; left: 30px; width: 170px; height: 130px; 
+    background-color: white; 
+    border: 2px solid grey; 
+    z-index: 9999;  
+    font-size: 12px;
+    padding: 8px; 
+">
+    <b>Magnitude Legend</b><br>
+    <i style="color:green;">●</i> Minor (≤ 3.9)<br>
+    <i style="color:orange;">●</i> Moderate (4.0–5.9)<br>
+    <i style="color:red;">●</i> Strong (≥ 6.0)<br>
+    Bigger circles = higher magnitude 
+</div>
+{% endmacro %}
+"""
+
+legend = MacroElement()
+legend._template = Template(legend_html)
+
+# Add the legend to the map
+m.get_root().add_child(legend)
+
+st.markdown("##### Location of earthquakes")
 st_folium(m, width=700, height=500)
