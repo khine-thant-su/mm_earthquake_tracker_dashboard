@@ -1,13 +1,13 @@
 # Earthquake Data Dashboard for Myanmar
 
-This repository contains Python scripts that scrape, clean, store, and visualize earthquake data from the USGS (United States Geological Survey) API, with a focus on earthquakes in Myanmar.
+This repository contains Python scripts that scrape, clean, store, and visualize earthquake data from the [United States Geological Survey (USGS) API](https://earthquake.usgs.gov/fdsnws/event/1/) for earthquakes, with a focus on earthquakes in Myanmar.
 
 ## 📌 Features
 
 - Scrapes earthquake data from the USGS API within a specified date range and geographic bounding box.
-- Filters and cleans the data to retain only earthquakes relevant to Myanmar.
+- Filters and cleans the data to retain only earthquakes in Myanmar in 2025.
 - Stores the cleaned data in a PostgreSQL database.
-- Visualizes earthquake locations on an interactive map using Folium.
+- Visualizes earthquake locations and monthly counts using Folium and Streamlit. 
 
 ## 🗂️ Project Structure
 
@@ -20,14 +20,14 @@ This repository contains Python scripts that scrape, clean, store, and visualize
 
 ## 🧪 Usage Instructions
 
-1. Configure the database connection<br>
-Edit config.py to include your PostgreSQL credentials (e.g., dbname, user, password, host, port).
+1. Configure the database connection:<br>
+Edit `config.py` to include your PostgreSQL credentials (e.g., dbname, user, password, host, port).
 
-2. Fetch and parse earthquake data<br>
-Run scrape&cleandata.py to retrieve raw earthquake data from the USGS API, clean the data, and insert cleaned data to the PostgreSQL database.
+2. Fetch and parse earthquake data:<br>
+Run `scrape&cleandata.py` to retrieve raw earthquake data from the USGS API, clean the data, and insert cleaned data to the PostgreSQL database.
 
-3. Visualize the data<br>
-Run map_quakes.py to generate an interactive map of the earthquakes using Folium.<br>
-Or run streamlit_app.py to generate a line plot of monthly earthquake counts and an interactive map of the earthquakes.<br>
+3. Visualize the data:<br>
+Run `map_quakes.py` to generate an interactive map of the earthquakes using Folium.<br>
+Or run `streamlit_app.py` to generate a line plot of monthly earthquake counts and an interactive map of the earthquakes.<br>
 
 **NOTE:** Earthquake magnitude classification referenced from [University of Alaska Fairbanks Earthquake Center.](https://earthquake.alaska.edu/earthquake-magnitude-classes)
