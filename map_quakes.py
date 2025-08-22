@@ -1,6 +1,5 @@
 # This script reads quake data from the PostgreSQL database, and creates an interactive map using Folium, where each earthquake is marked with a popup showing location, magnitude, depth, and time.
 
-
 import folium
 import pandas as pd
 from sqlalchemy import create_engine
@@ -14,9 +13,9 @@ def get_quake_data():
     :returns a Dataframe."""
     # Create the SQLAlchemy engine using PG8000 as the driver
     engine = create_engine(
-        f"postgresql+pg8000://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:5432/{DB_CONFIG['dbname']}")
+        f"postgresql+psycopg2://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}/{DB_CONFIG['dbname']}")
 
-    df = pd.read_sql("quake_info", engine)
+    df = pd.read_sql("SELECT * FROM quake_info", engine)
     return df
 
 def create_folium_map(quake_df):

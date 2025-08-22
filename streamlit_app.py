@@ -1,4 +1,4 @@
-from map_quakes import get_quake_data
+from sqlalchemy import create_engine
 import pandas as pd
 import calendar   # To get month names
 import streamlit as st
@@ -7,6 +7,14 @@ import altair as alt   # To make line plot
 import folium   # To make map
 from branca.element import Element   # To insert custom legend to Folium map
 from zoneinfo import ZoneInfo   # To change display to Myanmar Time Zone
+
+conn_info = st.secrets["connections"]["neon"]
+engine = create_engine(
+        f"{conn_info['dialect']}+psycopg2://{conn_info['username']}:{conn_info['password']}@{conn_info['host']}:{conn_info['port']}/{conn_info['database']}"
+)
+
+# Get data from DB
+df = pd.read_sql("SELECT * FROM quake_info;", engine)
 
 st.title("2025 Earthquakes in Myanmar")
 # components.html(
@@ -19,15 +27,12 @@ st.set_page_config(
     layout= "centered"
 )
 
-# Get data from DB
-df = get_quake_data()  # Returns a pandas DataFrame
-
 ####################### Show line plot #######################
 st.markdown("##### Monthly earthquake counts")
 
 # Change to datetime format to extract month
-df['date'] = pd.to_datetime(df['timestamp'])  # Returns a Series where each element is a timestamp
-df['month'] = df['date'].dt.month  # df['month'] is a Series
+# df['date'] = pd.to_datetime(df['timestamp'])  # Returns a Series where each element is a timestamp
+df['month'] = df['timestamp'].dt.month  # df['month'] is a Series
 
 # Make a dataframe with monthly quake counts
 monthly_counts = df.groupby('month').size()  # Count the number of quakes in each month
@@ -131,7 +136,7 @@ m.save("quake_map_with_legend.html")
 with open("quake_map_with_legend.html", "r", encoding = "utf-8") as file:
     html_content = file.read()
 
-# Render html map inside Streamlit app
+# Render HTML map inside Streamlit app
 components.html(html_content, height = 500)
 
 
