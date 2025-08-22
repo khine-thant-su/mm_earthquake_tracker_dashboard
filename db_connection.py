@@ -8,7 +8,7 @@ def create_quake_table():
     create_table_query = """
     CREATE TABLE IF NOT EXISTS quake_info (
         id SERIAL PRIMARY KEY,
-        timestamp TIMESTAMPTZ,
+        timestamp TIMESTAMP,
         magnitude NUMERIC NOT NULL,
         longitude NUMERIC NOT NULL,
         latitude NUMERIC NOT NULL,

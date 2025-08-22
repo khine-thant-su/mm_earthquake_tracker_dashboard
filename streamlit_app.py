@@ -1,12 +1,12 @@
-import calendar
-import streamlit as st
-import altair as alt
-import pandas as pd
-import folium
-from streamlit_folium import st_folium
-from branca.element import Template, MacroElement
-from zoneinfo import ZoneInfo
 from map_quakes import get_quake_data
+import pandas as pd
+import calendar   # To get month names
+import streamlit as st
+import streamlit.components.v1 as components  # To render the html map with a custom legend
+import altair as alt   # To make line plot
+import folium   # To make map
+from branca.element import Element   # To insert custom legend to Folium map
+from zoneinfo import ZoneInfo   # To change display to Myanmar Time Zone
 
 st.title("2025 Earthquakes in Myanmar")
 # components.html(
@@ -20,9 +20,11 @@ st.set_page_config(
 )
 
 # Get data from DB
-df = get_quake_data()  # returns a pandas DataFrame
+df = get_quake_data()  # Returns a pandas DataFrame
 
 ####################### Show line plot #######################
+st.markdown("##### Monthly earthquake counts")
+
 # Change to datetime format to extract month
 df['date'] = pd.to_datetime(df['timestamp'])  # Returns a Series where each element is a timestamp
 df['month'] = df['date'].dt.month  # df['month'] is a Series
@@ -34,8 +36,9 @@ monthly_quakes_df = pd.DataFrame(data={'month':monthly_counts.index, 'monthly_qu
 # Change month names from number to letter
 monthly_quakes_df['month_name'] = monthly_quakes_df['month'].apply(lambda x: calendar.month_abbr[x])
 
-# To make Altair line chart display month names in calendar order, convert the 'month_name' column to a categorical type with an explicit order.
 month_order = [m for m in calendar.month_abbr]  # Extract month names
+
+# To make Altair line chart display month names in calendar order, convert the 'month_name' column to a categorical type with an explicit order.
 monthly_quakes_df['month_name'] = pd.Categorical(
     monthly_quakes_df['month_name'],
     categories = month_order,
@@ -57,53 +60,80 @@ points = alt.Chart(monthly_quakes_df).mark_circle(size = 50, filled = True, colo
 
 chart = line + points
 
-st.markdown("##### Monthly earthquake counts")
 st.altair_chart(chart, use_container_width = True) # Match the width of the parent container
 
-####################### Show map #######################
-map_center = [21.5, 96.0]   # Center map on Myanmar
+####################### Show map with month filter #######################
+st.markdown("##### Location of earthquakes")
+
+### Month filter
+
+available_months = sorted(df['timestamp'].dt.month.unique())
+month_options = ["All quakes"] + [calendar.month_name[m] for m in available_months]  # Convert numeric to text month names
+
+# Month selection widget
+selected_month_name = st.selectbox("Select a month to filter earthquakes", month_options, index = 0, width = 300)  # Default to "All quakes" option
+
+# Filter data based on month selection
+filtered_df = (
+    df if selected_month_name == "All quakes"
+    else df[df['timestamp'].dt.month == list(calendar.month_name).index(selected_month_name)]
+)
+
+### Build map
+
+map_center = [21.5, 96.0]  # Center map on Myanmar
 mm_tzone = ZoneInfo("Asia/Yangon")
 
-# Create a base map
-m = folium.Map(location=map_center, zoom_start=5, tiles='CartoDB positron')
+def make_map(location, timezone, data):
+    """Makes a Folium map that shows magnitude, depth, and time for each earthquake, and a magnitude legend."""
 
-for _, row in df.iterrows():
-    folium.CircleMarker(
-        location = [row['latitude'], row['longitude']],
-        radius = row['magnitude'] ** 1.5,  # scale radius by magnitude
-        popup = f"Magnitude: {row['magnitude']}<br>Depth: {row['depth']}<br>Time: {row['timestamp'].astimezone(mm_tzone)}",
-        color = 'green' if row['magnitude'] <= 3.9 else 'orange' if row['magnitude'] <= 5.9 else 'red',  # Earthquake magnitude classifications from University of Alaska Fairbanks Earthquake Center
-        fill = True,
-        fill_opacity = 0.5
-    ).add_to(m)
+    # Create a base map
+    m = folium.Map(location=location, zoom_start=5, tiles='CartoDB positron')
 
-# Define the legend's HTML using Branca
-# 'this' refers to the current Folium map object, 'kwargs' is a dict of keyword arguments passed to the macro.
-legend_html = """
-{% macro html(this, kwargs) %}  
-<div style="
-    position: fixed; 
-    bottom: 40px; left: 30px; width: 170px; height: 130px; 
-    background-color: white; 
-    border: 2px solid grey; 
-    z-index: 9999;  
-    font-size: 12px;
-    padding: 8px; 
-">
-    <b>Magnitude Legend</b><br>
-    <i style="color:green;">●</i> Minor (≤ 3.9)<br>
-    <i style="color:orange;">●</i> Moderate (4.0–5.9)<br>
-    <i style="color:red;">●</i> Strong (≥ 6.0)<br>
-    Bigger circles = higher magnitude 
-</div>
-{% endmacro %}
-"""
+    for _, row in data.iterrows():
+        folium.CircleMarker(
+            location=[row['latitude'], row['longitude']],
+            radius=4,
+            popup=f"Magnitude: {row['magnitude']}<br>Depth: {row['depth']}<br>Time: {row['timestamp'].astimezone(timezone)}",  # Convert to local timezone to be displayed on map
+            color='green' if row['magnitude'] <= 3.9 else 'orange' if row['magnitude'] <= 5.9 else 'red',  # Earthquake magnitude classifications from University of Alaska Fairbanks Earthquake Center
+            fill=True,
+            fill_opacity=0.5
+        ).add_to(m)
 
-legend = MacroElement()
-legend._template = Template(legend_html)
+    # Add a custom HTML legend to the Folium map
+    legend_html = """
+    <div style="
+        position: fixed;
+        bottom: 40px; left: 30px; width: 170px; height: 100px;
+        background-color: white;
+        border: 2px solid grey;
+        z-index: 9999;
+        font-size: 12px;
+        padding: 8px;
+    ">
+        <b>Magnitude Legend</b><br>
+        <i style="color:green;">●</i> Minor (≤ 3.9)<br>
+        <i style="color:orange;">●</i> Moderate (4.0–5.9)<br>
+        <i style="color:red;">●</i> Strong (≥ 6.0)<br>
+    </div>
+    """
+    # Add the legend to the map
+    m.get_root().html.add_child(Element(legend_html))
 
-# Add the legend to the map
-m.get_root().add_child(legend)
+    return m
 
-st.markdown("##### Location of earthquakes")
-st_folium(m, width=700, height=500)
+m = make_map(map_center, mm_tzone, filtered_df)
+
+# Save the map to an HTML file
+m.save("quake_map_with_legend.html")
+
+# Read the HTML file
+with open("quake_map_with_legend.html", "r", encoding = "utf-8") as file:
+    html_content = file.read()
+
+# Render html map inside Streamlit app
+components.html(html_content, height = 500)
+
+
+
+

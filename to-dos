@@ -2,7 +2,6 @@ TO-DOS:
 - Add logic to update data daily (timestamp-based filtering)
 - [DONE] Create a requirements.txt
 - [DONE] Use Folium to show earthquakes on an interactive map of Myanmar
-
 Build app with Streamlit
 - [DONE] Connect to PostgreSQL database
 - [DONE] Show map and a line chart of earthquakes over time
@@ -10,8 +9,14 @@ Build app with Streamlit
 - [DONE] Display months in temporal order, instead of alphabetical order
 - [DONE] Add a legend to Folium map about green, orange, red color meanings for earthquakes
 - [DONE] Add depth to pop-up box on map
+- [DONE] Add a drop down box beside map to filter earthquakes by month
+- Add latest news about earthquakes
 
 UPDATES:
+8/21/2025:
+- Fixed the issue of magnitude legend not showing up on app's first launch. (inspired by https://www.datasciencebyexample.com/2023/12/27/how-to-render-html-file-using-streamlit-app/)
+- Added a drop down box for the map to filter earthquakes by month.
+
 8/18/2025: Made line chart showing monthly earthquake counts in 2025.
 
 7/7/2025: Finished scraping, cleaning, and inserting quake data to Postgres database.
