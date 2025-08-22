@@ -1,33 +1,35 @@
 # Earthquake Data Dashboard for Myanmar
 
 This repository contains Python scripts that scrape, clean, store, and visualize earthquake data from the [United States Geological Survey (USGS) API](https://earthquake.usgs.gov/fdsnws/event/1/) for earthquakes, with a focus on earthquakes in Myanmar.
+The Streamlit app visualizes earthquake data and allows users to explore seismic activity interactively. 
 
 ## 📌 Features
 
-- Scrapes earthquake data from the USGS API within a specified date range and geographic bounding box.
-- Filters and cleans the data to retain only earthquakes in Myanmar in 2025.
-- Stores the cleaned data in a PostgreSQL database.
-- Visualizes earthquake locations and monthly counts using Folium and Streamlit. 
+- Scrapes earthquake data from the USGS API within a specified date range and geographic bounding box specifying Myanmar.
+- Interactive map showing earthquakes filterable by month
+
+## Technical highlights
+
+- **Streamlit**: Provides the frontend UI and interactive components for the app.
+- **Neon (PostgreSQL)**: A serverless cloud database that stores earthquake data, used for deployment.
+- **SQLAlchemy & psycopg2-binary**: Used to connect to the Neon database and fetch data into Pandas DataFrames.
+- **Pandas**: For data manipulation and preprocessing before visualization.
+- **Folium / Altair**: Used for map visualization and plotting interactive charts.
+- **Secrets management**: `.streamlit/secrets.toml` (locally) and Streamlit Cloud secrets are used to securely store database credentials.
+- **Deployment**: Hosted on Streamlit Cloud.
 
 ## 🗂️ Project Structure
 
 - `scrape&cleandata.py`: Fetches, parses, and cleans earthquake data from Myanmar using the USGS API. Inserts cleaned earthquake data into a PostgreSQL database.
-- `map_quakes.py`: Generates an interactive map of earthquakes using Folium.
 - `streamlit_app.py`: Builds the Streamlit app that shows earthquakes over time and on a map.
-- `config.py`: Contains configuration settings such as database name, user, password, host, and port.
 - `db_connection.py`: Manages the PostgreSQL database connection.
 - `README.txt`: This file.
 
 ## 🧪 Usage Instructions
 
-1. Configure the database connection:<br>
-Edit `config.py` to include your PostgreSQL credentials (e.g., dbname, user, password, host, port).
-
-2. Fetch and parse earthquake data:<br>
-Run `scrape&cleandata.py` to retrieve raw earthquake data from the USGS API, clean the data, and insert cleaned data to the PostgreSQL database.
-
-3. Visualize the data:<br>
-Run `map_quakes.py` to generate an interactive map of the earthquakes using Folium.<br>
-Or run `streamlit_app.py` to generate a line plot of monthly earthquake counts and an interactive map of the earthquakes.<br>
+1. Clone the repo
+2. Create a virtual environment
+3. Install dependencies: `pip install -r requirements.txt`
+4. Run locally: `streamlit run app.py`
 
 **NOTE:** Earthquake magnitude classification referenced from [University of Alaska Fairbanks Earthquake Center.](https://earthquake.alaska.edu/earthquake-magnitude-classes)
