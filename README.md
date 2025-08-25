@@ -1,6 +1,9 @@
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://myanmar-earthquakes.streamlit.app/)
+
 # Earthquake Data Dashboard for Myanmar
 
-This repository contains Python scripts that scrape, clean, store, and visualize earthquake data from the [United States Geological Survey (USGS) API](https://earthquake.usgs.gov/fdsnws/event/1/) for earthquakes, with a focus on earthquakes in Myanmar.
+This repository contains Python scripts that scrape, clean, store, and visualize earthquake data from the [United States Geological Survey (USGS) API](https://earthquake.usgs.gov/fdsnws/event/1/) for earthquakes, with a focus on earthquakes in Myanmar. <br>
+
 The Streamlit app visualizes earthquake data and allows users to explore seismic activity interactively. 
 
 ## 📌 Features
