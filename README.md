@@ -35,4 +35,4 @@ The Streamlit app visualizes earthquake data and allows users to explore seismic
 3. Install dependencies: `pip install -r requirements.txt`
 4. Run locally: `streamlit run app.py`
 
-**NOTE:** Earthquake magnitude classification referenced from [University of Alaska Fairbanks Earthquake Center.](https://earthquake.alaska.edu/earthquake-magnitude-classes)
+**NOTE:** Earthquake magnitude classification referenced from [Alaska Earthquake Center.](https://earthquake.alaska.edu/earthquake-magnitude-classes)

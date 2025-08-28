@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine  # To establish connection to a SQL database
 import pandas as pd
 import calendar   # To get month names
 import streamlit as st
@@ -8,18 +8,13 @@ import folium   # To make map
 from branca.element import Element   # To insert custom legend to Folium map
 from zoneinfo import ZoneInfo   # To change display to Myanmar Time Zone
 
+# Get data from DB
 conn_info = st.secrets["connections"]["neon"]
 engine = create_engine(
         f"{conn_info['dialect']}+psycopg2://{conn_info['username']}:{conn_info['password']}@{conn_info['host']}:{conn_info['port']}/{conn_info['database']}"
 )
 
-# Get data from DB
 df = pd.read_sql("SELECT * FROM quake_info;", engine)
-
-st.title("2025 Earthquakes in Myanmar")
-# components.html(
-#     "<p><span style='text-decoration: line-through double red;'>Oops</span>!</p>"
-# )
 
 st.set_page_config(
     page_title="Myanmar Earthquakes Dashboard",
@@ -27,12 +22,31 @@ st.set_page_config(
     layout= "centered"
 )
 
+st.title("2025 Earthquakes in Myanmar")
+st.info("""In **March 2025**, a powerful **7.7-magnitude earthquake** struck Myanmar's Sagaing Region, marking one of the country's deadliest natural disasters in recent history. Over **5,000 people** died, and many more were displaced.
+
+- Ongoing military assault of civilians in Myanmar severely hindered relief efforts and accurate reporting of the earthquake's death toll.
+- Despite fading global attention, **seismic activity continues** across Myanmar.
+- This app monitors earthquakes in Myanmar since **January 2025** to raise awareness of the ongoing threat to lives and livelihoods.
+""", icon="🚨")
+
+st.divider()
+
+st.info(f""" #### Key takeaways  
+- Since January 2025, **{len(df)} earthquakes** have been recorded in Myanmar.  
+- **68 earthquakes** happened after the catastrophic March event.
+- **9 were magnitude 5 or higher**, posing serious risks.
+- Seismic activity remains concentrated in **central Myanmar**, near the **Sagaing Region**, the epicenter of the March quake. 
+- This pattern suggests a **continued earthquake danger** and an ongoing **threat to lives** in the region.
+""")
+
+st.divider()
+
 ####################### Show line plot #######################
-st.markdown("##### Monthly earthquake counts")
+st.markdown("#### Number of earthquakes per month (Jan 2025 - present)")
 
 # Change to datetime format to extract month
-# df['date'] = pd.to_datetime(df['timestamp'])  # Returns a Series where each element is a timestamp
-df['month'] = df['timestamp'].dt.month  # df['month'] is a Series
+df['month'] = df['timestamp'].dt.month
 
 # Make a dataframe with monthly quake counts
 monthly_counts = df.groupby('month').size()  # Count the number of quakes in each month
@@ -51,9 +65,29 @@ monthly_quakes_df['month_name'] = pd.Categorical(
 
 # Create line chart
 line = alt.Chart(monthly_quakes_df).mark_line().encode(
-        alt.X('month_name:N', title='Month', sort = month_order, axis=alt.Axis(tickMinStep=1, labelAngle=0)),  # N means nominal
-        alt.Y('monthly_quakes:Q').title('Number of earthquakes'),
+        alt.X('month_name:N', title='Month', sort = month_order, axis=alt.Axis(tickMinStep=1, labelAngle=0)),  # N means nominal data (categorical and unordered). Tells Altair to treat month names as discrete categories.
+        alt.Y('monthly_quakes:Q').title('Number of earthquakes'),  # Q means quantitative data
     )
+
+# Add vertical line for March 2025
+march_line = alt.Chart(pd.DataFrame({
+    'month_name': ['Mar'],
+    'label': ["March 2025: Major Earthquake"]
+})).mark_rule(color = "red").encode(
+    x = alt.X('month_name:N', sort = month_order),
+    tooltip = 'label:N'
+)
+
+# Add label above the line
+march_text = alt.Chart(pd.DataFrame({
+    'month_name': ['Mar'],
+    'monthly_quakes': [monthly_quakes_df['monthly_quakes'].max()],  # place label at top
+    'label': ["March 2025: Major Earthquake"]
+})).mark_text(dy=-10, color='red').encode(
+    x = alt.X('month_name:N', sort = month_order),
+    y = 'monthly_quakes:Q',
+    text='label:N'
+)
 
 points = alt.Chart(monthly_quakes_df).mark_circle(size = 50, filled = True, color = 'red').encode(
     alt.X('month_name:N', sort = month_order),
@@ -63,12 +97,40 @@ points = alt.Chart(monthly_quakes_df).mark_circle(size = 50, filled = True, colo
         alt.Tooltip('monthly_quakes:Q', title = 'Num of earthquakes')] # The information that appears when a user hovers over a data point in the chart
 )
 
-chart = line + points
+chart = line + march_line + march_text+ points
 
 st.altair_chart(chart, use_container_width = True) # Match the width of the parent container
 
+st.info("""Since the major earthquake in March, seismic activities have continued at a higher rate per month than before. This suggests continued earthquake danger in Myanmar.
+""")
+
+st.divider()
+####################### Magnitude histogram #######################
+st.markdown("#### Earthquake magnitude distribution (Jan 2025 - present)")
+
+hist = alt.Chart(df).mark_bar().encode(
+    alt.X("magnitude:Q", bin=alt.Bin(step=0.5), title="Magnitude"),
+    alt.Y("count():Q", title="Frequency"),
+    tooltip=[alt.Tooltip("count():Q", title="Frequency")]
+).properties(
+    width=600,
+    height=400
+)
+
+# Display the histogram
+st.altair_chart(hist, use_container_width=True)
+
+st.markdown("""**Note**: Each bin includes values ≥ left edge and < right edge.  
+For e.g. 4.0-4.5 bin includes earthquakes with 4.0 magnitude but not those with 4.5 magnitude.  """)
+
+st.info("""Most earthquakes have been in the minor-light range (3.0-4.9 magnitude).  
+But there have been **9 earthquakes** since March that were in moderate-major range (5.0-7.9 magnitude).
+""")
+
+st.divider()
+
 ####################### Show map with month filter #######################
-st.markdown("##### Location of earthquakes")
+st.markdown("#### Location of earthquakes (Jan 2025 - present)")
 
 ### Month filter
 
@@ -139,6 +201,7 @@ with open("quake_map_with_legend.html", "r", encoding = "utf-8") as file:
 # Render HTML map inside Streamlit app
 components.html(html_content, height = 500)
 
+st.divider()
 
 
 
