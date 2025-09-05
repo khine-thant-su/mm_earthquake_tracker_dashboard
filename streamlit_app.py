@@ -22,6 +22,8 @@ st.set_page_config(
     layout= "centered"
 )
 
+st.image("earthquake_photo_main.jpeg", caption = "Collapsed buildings in Myanmar following the 7.7 magnitude earthquake in March 2025. \nSource: [Amnesty International](https://www.amnesty.org/en/latest/news/2025/04/myanmar-inhumane-military-attacks-in-earthquake-areas-hindering-relief-efforts/)")
+
 st.title("2025 Earthquakes in Myanmar")
 st.info("""In **March 2025**, a powerful **7.7-magnitude earthquake** struck Myanmar's Sagaing Region, marking one of the country's deadliest natural disasters in recent history. Over **5,000 people** died, and many more were displaced.
 
@@ -37,11 +39,13 @@ st.info(f""" #### Key takeaways
 - **68 earthquakes** happened after the catastrophic March event.
 - **9 were magnitude 5 or higher**, posing serious risks.
 - Seismic activity remains concentrated in **central Myanmar**, near the **Sagaing Region**, the epicenter of the March quake. 
-- This pattern suggests a **continued earthquake danger** and an ongoing **threat to lives** in the region.
+- This pattern suggests **continued earthquake danger** and ongoing **threat to lives** in the region.
 """)
 
-st.divider()
 
+st.image("earthquake_photo_2.png", caption = "A collapsed building in Mandalay, Myanmar -- about 11 miles (17.2 km) from the epicenter of the 7.7 magnitude earthquake in March 2025. Source: [The Guardian](https://www.theguardian.com/world/gallery/2025/mar/29/our-town-looks-like-a-collapsed-city-myanmar-earthquake-in-pictures)")
+
+st.divider()
 ####################### Show line plot #######################
 st.markdown("#### Number of earthquakes per month (Jan 2025 - present)")
 
@@ -139,6 +143,7 @@ month_options = ["All quakes"] + [calendar.month_name[m] for m in available_mont
 
 # Month selection widget
 selected_month_name = st.selectbox("Select a month to filter earthquakes", month_options, index = 0, width = 300)  # Default to "All quakes" option
+st.markdown("**Click on a circle to see the magnitude, depth, and time of each earthquake.**")
 
 # Filter data based on month selection
 filtered_df = (
@@ -203,5 +208,41 @@ components.html(html_content, height = 500)
 
 st.divider()
 
+st.image("earthquake_photo_3.jpg", caption = "Residents of Sagaing Township, the epicenter of the earthquake, have been spending their days and nights outdoors since March 28. Source: [Democratic Voice of Burma](https://english.dvb.no/earthquake-epicenter-of-sagaing-region-two-months-later/)")
 
+####################### Donation resources #######################
+st.header("""What can you do to help?""")
 
+st.info("""
+If you are able, please consider donating to community-led earthquake relief efforts in Myanmar.  
+
+Below you will find trustworthy organizations working with grassroots responders -- **not through the Myanmar military-controlled channels** -- to provide earthquake relief to impacted communities.
+""")
+
+card_height = 400
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    with st.container():
+        st.image("better_burma_logo.png", width=160)
+        st.markdown("##### [Better Burma](https://www.betterburma.org)")
+        st.write("A U.S.-based non-profit supporting Myanmar people through humanitarian aid and advocacy")
+        st.link_button("Donate", "https://www.betterburma.org/earthquakerelief")
+
+with col2:
+    with st.container():
+        st.write("\n" * 8)  # Spacer to align image with col1
+        st.image("mutual_aid_myanmar_logo.png", width=200)
+        st.write("\n" * 2)
+        st.markdown("##### [Mutual Aid Myanmar](https://www.mutualaidmyanmar.org/)")
+        st.write("A collection of activists, academics, and policy makers supporting the democracy movement in Myanmar")
+        st.link_button("Donate", "https://www.mutualaidmyanmar.org/earthquake")
+
+with col3:
+    with st.container():
+        st.write("\n" * 6)  # Spacer to align image with col1 & col2
+        st.image("us_campaign_burma_logo.png", width=190)
+        st.markdown("##### [U.S. Campaign for Burma](https://www.uscampaignforburma.org/)")
+        st.write("An organization of Burmese and Americans promoting human rights in Myanmar")
+        st.link_button("Donate", "https://actionnetwork.org/fundraising/us-campaign-for-burma-donation-page/")
