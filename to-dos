@@ -1,4 +1,5 @@
-TO-DOS:
+TO-DOS and UPDATES:
+
 - Add logic to update data daily (timestamp-based filtering)
 - [DONE] Create a requirements.txt
 - [DONE] Use Folium to show earthquakes on an interactive map of Myanmar
@@ -16,8 +17,13 @@ Deploy app to Streamlit Cloud
 - [DONE] Set up secrets.toml for Streamlit
 
 UPDATES:
+
+9/15/2025:
+- Fixed the issue of compute hours being used up quickly by adding st.cache_data decorator to the fetch_data function. This prevents the Neon database from being queried every time the Streamlit app runs or refreshes from user interaction.
+
 8/21/2025:
 - Fixed the issue of magnitude legend not showing up on app's first launch. (inspired by https://www.datasciencebyexample.com/2023/12/27/how-to-render-html-file-using-streamlit-app/)
+- st.folium() did not display the legend correctly on my map. A cool workaround is to save the Folium map with custom html for legend as a html file, then embed that HTML file into Streamlit using st.components.v1.html(), which displays the HTML map in an iframe (an HTML element that allows you to embed another webpage within the current page).
 - Added a drop down box for the map to filter earthquakes by month.
 
 8/18/2025: Made line chart showing monthly earthquake counts in 2025.
@@ -25,7 +31,7 @@ UPDATES:
 7/7/2025: Finished scraping, cleaning, and inserting quake data to Postgres database.
 
 7/14/2025:
-- Checked why the most recent earthquake is the one on 7/2/2025 - because not everything scraped is from Burma.
+- Checked why the most recent earthquake is the one on 7/2/2025 - because not everything scraped is from Burma (Myanmar).
 - Updated the timestamps in the database to UTC time.
 - Made a draft interactive map using Folium.
 
