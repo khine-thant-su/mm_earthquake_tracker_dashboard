@@ -11,7 +11,7 @@ The Streamlit app visualizes earthquake data and allows users to explore seismic
 - Scrapes earthquake data from the USGS API within a specified date range and geographic bounding box specifying Myanmar.
 - Interactive map showing earthquakes filterable by month
 
-## Technical highlights
+## ⚡ Technical highlights
 
 - **Streamlit**: Provides the frontend UI and interactive components for the app.
 - **Neon (PostgreSQL)**: A serverless cloud database that stores earthquake data, used for deployment.
@@ -21,18 +21,18 @@ The Streamlit app visualizes earthquake data and allows users to explore seismic
 - **Secrets management**: `.streamlit/secrets.toml` (locally) and Streamlit Cloud secrets are used to securely store database credentials.
 - **Deployment**: Hosted on Streamlit Cloud.
 
-## 🗂️ Project Structure
+## 🗂️ Project structure
 
 - `scrape&cleandata.py`: Fetches, parses, and cleans earthquake data from Myanmar using the USGS API. Inserts cleaned earthquake data into a PostgreSQL database.
 - `streamlit_app.py`: Builds the Streamlit app that shows earthquakes over time and on a map.
-- `db_connection.py`: Manages the PostgreSQL database connection.
-- `README.txt`: This file.
+- `db_connection.py`: Manages the local PostgreSQL database connection.
+- `README.md`: This file.
 
 ## 🧪 Usage Instructions
 
 1. Clone the repo
 2. Create a virtual environment
 3. Install dependencies: `pip install -r requirements.txt`
-4. Run locally: `streamlit run app.py`
+4. Run locally: `streamlit run streamlit_app.py`
 
 **NOTE:** Earthquake magnitude classification referenced from [Alaska Earthquake Center.](https://earthquake.alaska.edu/earthquake-magnitude-classes)

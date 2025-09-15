@@ -80,7 +80,7 @@ def save_quake_data(conn, timestamp, magnitude, longitude, latitude, depth, plac
                 existing_timestamp, existing_place = result
                 if (existing_timestamp == timestamp and
                 existing_place == place):
-                    print("The scraped data already exists in the quake_info table in the database.")
+                    # print("The scraped data already exists in the quake_info table in the database.")
                     return
 
             # If not the same (or no row exists), insert the new data
@@ -131,17 +131,22 @@ if __name__ == "__main__":
 
 
 # Check the data stored in Postgres database
+# import pandas as pd
 # conn = get_db_connection()
 # with conn.cursor() as cur:
 #     cur.execute("""
 #             SELECT *
 #             FROM quake_info
-#             ORDER BY timestamp desc
-#             LIMIT 1
 #             """,)
-#     result = cur.fetchall()
 #
-# print(result)
+#     # Get column names from cursor description
+#     columns = [desc[0] for desc in cur.description]
+#
+#     # Fetch all rows
+#     rows = cur.fetchall()
+#
+#     # Create DataFrame
+#     df_test = pd.DataFrame(rows, columns=columns)
 
 # conn = get_db_connection()
 # with conn.cursor() as cur:

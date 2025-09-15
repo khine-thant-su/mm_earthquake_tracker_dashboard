@@ -8,13 +8,18 @@ import folium   # To make map
 from branca.element import Element   # To insert custom legend to Folium map
 from zoneinfo import ZoneInfo   # To change display to Myanmar Time Zone
 
+@st.cache_data(ttl="1d")
 # Get data from DB
-conn_info = st.secrets["connections"]["neon"]
-engine = create_engine(
+def fetch_data():
+    conn_info = st.secrets["connections"]["neon"]
+    engine = create_engine(
         f"{conn_info['dialect']}+psycopg2://{conn_info['username']}:{conn_info['password']}@{conn_info['host']}:{conn_info['port']}/{conn_info['database']}"
-)
+    )
+    return pd.read_sql("SELECT * FROM quake_info;", engine)
 
-df = pd.read_sql("SELECT * FROM quake_info;", engine)
+df = fetch_data()
+
+# Note: if you don't use st.cache_data decorator and call df directly, pd.read_sql() line will be run every time the dashboard loads/refreshes due to user interaction. This eats up your database's compute hours.
 
 st.set_page_config(
     page_title="Myanmar Earthquakes Dashboard",
