@@ -8,7 +8,7 @@ import folium   # To make map
 from branca.element import Element   # To insert custom legend to Folium map
 from zoneinfo import ZoneInfo   # To change display to Myanmar Time Zone
 
-@st.cache_data(ttl="7d")
+# @st.cache_data(ttl="7d")
 # Get data from DB
 def fetch_data():
     conn_info = st.secrets["connections"]["neon"]
