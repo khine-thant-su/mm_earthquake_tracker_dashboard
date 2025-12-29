@@ -133,7 +133,7 @@ st.markdown("""**Note**: Each bin includes values ≥ left edge and < right edge
 For e.g. 4.0-4.5 bin includes earthquakes with 4.0 magnitude but not those with 4.5 magnitude.  """)
 
 st.info("""Most earthquakes have been in the minor-light range (3.0-4.9 magnitude).  
-But there have been **9 earthquakes** since March that were in moderate-major range (5.0-7.9 magnitude).
+But there have been **11 earthquakes** since March that were in moderate-major range (5.0-7.9 magnitude).
 """)
 
 st.divider()
