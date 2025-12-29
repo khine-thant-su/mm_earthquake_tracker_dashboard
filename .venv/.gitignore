@@ -1,0 +1,21 @@
+# I used freecodecamp's convention for the file paths used in this gitignore file.
+
+
+# Ignore files located in the root directory
+/.env
+/to-dos.txt
+
+# Ignore secrets.toml file located in the streamlit directory in the root directory
+.streamlit/secrets.toml
+
+# User-specific stuff
+# vcs=Version Control System. vcs.xml stores info about git or other vcs's settings.
+# By adding vcs.xml file to Git, when someone clones my repo and opens it in PyCharm, the IDE will know the project is managed by Git.
+# workspace.xml is a central repo for user-specific project-level configurations
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/shelf
+
+# modules.xml stores the locations of .iml files for each module.
+.idea/modules.xml
