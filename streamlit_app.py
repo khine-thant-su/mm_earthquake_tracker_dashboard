@@ -34,17 +34,17 @@ st.info("""In **March 2025**, a powerful **7.7-magnitude earthquake** struck Mya
 
 - Ongoing military assault of civilians in Myanmar severely hindered relief efforts and accurate reporting of the earthquake's death toll.
 - Despite fading global attention, **seismic activity continues** across Myanmar.
-- This app monitors earthquakes in Myanmar since **January 2025** to raise awareness of the ongoing threat to lives and livelihoods.
+- This app records earthquakes in Myanmar in 2025 to raise awareness of the ongoing threat to lives and livelihoods.
 """, icon="🚨")
 
 st.divider()
 
 st.info(f""" #### Key takeaways  
-- Since January 2025, **{len(df)} earthquakes** have been recorded in Myanmar.  
-- **68 earthquakes** happened after the catastrophic March event.
-- **9 were magnitude 5 or higher**, posing serious risks.
+- From January to December 2025, **{len(df)} earthquakes** were recorded in Myanmar.  
+- **99 earthquakes** with minor-moderate magnitudes happened after the catastrophic March event.
+- **11 were magnitude 5 or higher**, posing serious risks as shown in the pictures. 
 - Seismic activity remains concentrated in **central Myanmar**, near the **Sagaing Region**, the epicenter of the March quake. 
-- This pattern suggests **continued earthquake danger** and ongoing **threat to lives** in the region.
+- This pattern suggests **continued earthquake danger** and **ongoing threat to lives** in the region.
 """)
 
 
@@ -52,7 +52,7 @@ st.image("pictures/earthquake_photo_2.png", caption = "A collapsed building in M
 
 st.divider()
 ####################### Show line plot #######################
-st.markdown("#### Number of earthquakes per month (Jan 2025 - present)")
+st.markdown("#### Number of earthquakes per month (Jan - Dec 2025)")
 
 # Change to datetime format to extract month
 df['month'] = df['timestamp'].dt.month
@@ -115,7 +115,7 @@ st.info("""Since the major earthquake in March, seismic activities have continue
 
 st.divider()
 ####################### Magnitude histogram #######################
-st.markdown("#### Earthquake magnitude distribution (Jan 2025 - present)")
+st.markdown("#### Earthquake magnitude distribution (Jan - Dec 2025)")
 
 hist = alt.Chart(df).mark_bar().encode(
     alt.X("magnitude:Q", bin=alt.Bin(step=0.5), title="Magnitude"),
@@ -139,7 +139,7 @@ But there have been **11 earthquakes** since March that were in moderate-major r
 st.divider()
 
 ####################### Show map with month filter #######################
-st.markdown("#### Location of earthquakes (Jan 2025 - present)")
+st.markdown("#### Location of earthquakes (Jan - Dec 2025)")
 
 ### Month filter
 
@@ -147,8 +147,8 @@ available_months = sorted(df['timestamp'].dt.month.unique())
 month_options = ["All quakes"] + [calendar.month_name[m] for m in available_months]  # Convert numeric to text month names
 
 # Month selection widget
-selected_month_name = st.selectbox("Select a month to filter earthquakes", month_options, index = 0, width = 300)  # Default to "All quakes" option
-st.markdown("**Click on a circle to see the magnitude, depth, and time of each earthquake.**")
+selected_month_name = st.selectbox("Select a month to filter earthquakes:", month_options, index = 0, width = 300)  # Default to "All quakes" option
+st.markdown("👉🏼 **Click on a circle to see the magnitude, depth, and time of each earthquake.**")
 
 # Filter data based on month selection
 filtered_df = (
@@ -233,7 +233,7 @@ with col1:
         st.image("pictures/better_burma_logo.png", width=160)
         st.markdown("##### [Better Burma](https://www.betterburma.org)")
         st.write("A U.S.-based non-profit supporting Myanmar people through humanitarian aid and advocacy")
-        st.link_button("Donate", "https://www.betterburma.org/earthquakerelief")
+        st.link_button("**Donate**", "https://www.betterburma.org/earthquakerelief")
 
 with col2:
     with st.container():
@@ -242,7 +242,7 @@ with col2:
         st.write("\n" * 2)
         st.markdown("##### [Mutual Aid Myanmar](https://www.mutualaidmyanmar.org/)")
         st.write("A collection of activists, academics, and policy makers supporting the democracy movement in Myanmar")
-        st.link_button("Donate", "https://www.mutualaidmyanmar.org/earthquake")
+        st.link_button("**Donate**", "https://www.mutualaidmyanmar.org/earthquake")
 
 with col3:
     with st.container():
@@ -250,4 +250,4 @@ with col3:
         st.image("pictures/us_campaign_burma_logo.png", width=190)
         st.markdown("##### [U.S. Campaign for Burma](https://www.uscampaignforburma.org/)")
         st.write("An organization of Burmese and Americans promoting human rights in Myanmar")
-        st.link_button("Donate", "https://actionnetwork.org/fundraising/us-campaign-for-burma-donation-page/")
+        st.link_button("**Donate**", "https://actionnetwork.org/fundraising/us-campaign-for-burma-donation-page/")
